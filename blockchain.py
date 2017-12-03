@@ -2,7 +2,8 @@ import hashlib
 import json
 from time import time
 from uuid import uuid4
-
+from urllib.parse import urlparse
+import requests
 
 class Blockchain(object):
     # Blockchain class
@@ -11,6 +12,7 @@ class Blockchain(object):
         self.chain = []
         self.current_transactions = []
         self.new_block(proof=100, previous_hash=1)
+        self.nodes = set()
 
     def new_block(self, proof, previous_hash=None):
         """
@@ -70,6 +72,75 @@ class Blockchain(object):
             proof += 1
 
         return proof
+
+    def register_node(self, address):
+
+        """
+        Add a new node to the list of nodes
+        :param address: <str> Address of node.
+        :return: None
+        """
+
+        parsed_url = urlparse(address)
+        self.nodes.add(parsed_url.netloc)
+
+    def valid_chain(self, chain):
+         """
+        Determine if a given blockchain is valid
+        :param chain: <list> A blockchain
+        :return: <bool> True if valid, False if not
+        """
+
+        last_block = chain[0]
+        current_index = 1
+
+        while current_index < len(chain):
+            block = chain[current_index]
+            print(f'{last_block}')
+            print(f'{block}')
+            print("\n---------------\n")
+
+            if block['previous_hash'] != self.hash(last_block):
+                return False
+
+            if not self.valid_proof(last_block['proof'],block['proof']):
+                return False
+        
+            last_block = block
+            current_index = += 1
+
+        return True
+
+    def resolve_conflicts(self):
+        """
+        This is our Consensus Algorithm, it resolves conflicts
+        by replacing our chain with the longest one in the network.
+        :return: <bool> True if our chain was replaced, False if not
+        """
+
+        neighbours =  self.nodes
+        new_chain = None
+
+        max_length = len(self.chain)
+
+        for node in neighbours:
+
+            response = requests.get(f'http://{node}/chain')
+
+            if respnse.status_code == 200:
+
+                length = response.json()['length']
+                chain = response.json()['chain']
+
+                if length > max_length and self.valid_chain(chain):
+                    max_length = length
+                    new_chain = chain
+        
+        if new_chain:
+            self.chain = new_chain
+            return True
+
+        return False
 
     @staticmethod
     def valid_proof(last_proof, proof):
