@@ -11,6 +11,7 @@ class Blockchain(object):
         self.new_block(proof=100, previous_hash=1)
 
     def new_block(self, proof, previous_hash=None):
+        
         """
         Creates a new block in the blockchain
         
@@ -35,7 +36,8 @@ class Blockchain(object):
         return block
 
     def new_transaction(self):
-         """
+        
+        """
         Creates a new transaction to go into the next mined Block
 
         :param sender: <str> Address of the Sender
@@ -54,10 +56,17 @@ class Blockchain(object):
 
     @staticmethod
     def hash(block):
-        # Hashes a block
-        pass
+
+        """
+        Creates a SHA-256 hash of a Block
+        :param block: <dict> Block
+        :return: <str>
+        """
+
+        block_string = json.dumps(block, sort_keys=True).encode()
+        return hashlib.sha256(block_string).hexdigest()
 
     @property
-    def last_block['index'] + 1(self):
+    def last_block(self):
         # Returns the last block of the chain
-        pass
+        return self.chain[-1]
