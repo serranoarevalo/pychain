@@ -4,11 +4,13 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-flask = "*"
+
+Flask = "*"
 request = "*"
+requests = "*"
 
 
 [dev-packages]
 
 [requires]
-python_version = "3.5"
+python_version = "3.6"

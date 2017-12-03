@@ -2,8 +2,8 @@ import hashlib
 import json
 from time import time
 from uuid import uuid4
+from flask import Flask, jsonify, request
 
-from flask import Flase
 
 class Blockchain(object):
     # Blockchain class
@@ -38,7 +38,7 @@ class Blockchain(object):
 
         return block
 
-    def new_transaction(self):
+    def new_transaction(self, sender, recipient, amount):
         
         """
         Creates a new transaction to go into the next mined Block
@@ -131,9 +131,9 @@ def mine():
 
     response = {
         'message': "New block Forged",
-        'index': block['index']
-        'transactions': block['transactions']
-        'proof': block['proof']
+        'index': block['index'],
+        'transactions': block['transactions'],
+        'proof': block['proof'],
         'previous_hash': block['previous_hash'],
     }
 
@@ -148,7 +148,7 @@ def new_transaction():
 
     # Check that all the required fields are in the POST'ed data
     required = ['sender', 'recipient', 'amount']
-    if not all(field in values for field in required)
+    if not all(field in values for field in required):
         return "Missing values", 400
 
     # Create a new transaction
