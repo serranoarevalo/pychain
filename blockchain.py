@@ -144,8 +144,6 @@ def new_transaction():
     # Get the POST'ed values
     values = request.get_json()
 
-
-
     # Check that all the required fields are in the POST'ed data
     required = ['sender', 'recipient', 'amount']
     if not all(field in values for field in required):
