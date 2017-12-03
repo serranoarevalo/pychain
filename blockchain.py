@@ -8,9 +8,31 @@ class Blockchain(object):
     def __init__(self):
         self.chain = []
         self.current_transactions = []
+        self.new_block(proof=100, previous_hash=1)
 
-    def new_block(self, sender, recipient, amount):
-        pass
+    def new_block(self, proof, previous_hash=None):
+        """
+        Creates a new block in the blockchain
+        
+        :param proof: <init> The proof given by the Proof of Work algorithm
+        :param previous_hash: (optional) <str> Hash of the previos block
+        :return: <dict> New block
+        
+        """
+
+        block = {
+            'index': len(self.chain) + 1,
+            'timestamp': time(),
+            'transactions': self.current_transactions,
+            'proof': proof,
+            'previous_hash': previous_hash or self.hash(self.chain[-1]),
+        }
+
+        self.current_transactions = []
+
+        self.chain.append(block)
+
+        return block
 
     def new_transaction(self):
          """
