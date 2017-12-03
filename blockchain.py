@@ -85,7 +85,8 @@ class Blockchain(object):
         self.nodes.add(parsed_url.netloc)
 
     def valid_chain(self, chain):
-         """
+        
+        """
         Determine if a given blockchain is valid
         :param chain: <list> A blockchain
         :return: <bool> True if valid, False if not
@@ -107,7 +108,7 @@ class Blockchain(object):
                 return False
         
             last_block = block
-            current_index = += 1
+            current_index += 1
 
         return True
 
